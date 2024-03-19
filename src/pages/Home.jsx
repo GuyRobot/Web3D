@@ -1,8 +1,9 @@
 import { Canvas } from '@react-three/fiber'
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import Loader from '../components/Loader'
 import { Island } from '../models/Island'
-import { ScrollControls, Sky } from '@react-three/drei'
+import { Sky } from '@react-three/drei'
+import Plane from '../models/Plane'
 
 const Home = () => {
   const adjuctIslandForScreen = () => {
@@ -17,7 +18,28 @@ const Home = () => {
     return [screenPosition, screenScale, rotation]
   }
 
+
+
+  const adjustBiplaneForScreenSize = () => {
+    let screenScale, screenPosition;
+
+    // If screen width is less than 768px, adjust the scale and position
+    if (window.innerWidth < 768) {
+      screenScale = [1.5, 1.5, 1.5];
+      screenPosition = [0, -1.5, 0];
+    } else {
+      screenScale = [3, 3, 3];
+      screenPosition = [0, -4, -4];
+    }
+
+    return [screenScale, screenPosition];
+  };
+
   const [screenPosition, screenScale, rotation] = adjuctIslandForScreen();
+  const [biplaneScale, biplanePosition] = adjustBiplaneForScreenSize();
+
+  const [isRotating, setIsRotating] = useState(false);
+  const [currentStage, setCurrentStage] = useState(1)
 
   return (
     <section className='w-full h-screen relative'>
@@ -30,7 +52,11 @@ const Home = () => {
           <spotLight />
           <hemisphereLight skyColor="#b1e1ff" groundColor={"#000000"} intensity={1} />
           <Sky />
-          <Island position={screenPosition} scale={screenScale} rotation={rotation} />
+          <Island position={screenPosition} scale={screenScale} rotation={rotation} setCurrentStage={setCurrentStage} isRotating={isRotating} setIsRotating={setIsRotating} />
+          <Plane isRotating={isRotating}
+            position={biplanePosition}
+            rotation={[0, 20.1, 0]}
+            scale={biplaneScale} />
         </Suspense>
       </Canvas>
     </section>
