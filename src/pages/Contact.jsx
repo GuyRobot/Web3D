@@ -1,5 +1,9 @@
 import React from 'react'
 import emailJs from "@emailjs/browser"
+import { Alert, Loader } from "../components";
+import { Suspense, useRef, useState } from "react";
+import { Fox } from "../models";
+import useAlert from "../hooks/useAlert";
 
 const Contact = () => {
   const formRef = useRef();
@@ -14,6 +18,7 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCurrentAnimation("hit");
     setLoading(true);
     emailJs.send(
       import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
@@ -28,13 +33,21 @@ const Contact = () => {
       import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
     ).then(() => {
       setLoading(false);
-      setForm({
-        name: "",
-        email: "",
-        message: "",
-      });
+      setCurrentAnimation("idle")
+      showAlert({ text: 'Message sent successfully!', type: "success" });
+      setTimeout(() => {
+        setCurrentAnimation("idle");
+        setForm({
+          name: "",
+          email: "",
+          message: "",
+        });
+
+      }, 3000);
     }).catch(() => {
       setLoading(false);
+      setCurrentAnimation("idle");
+      showAlert({ text: 'Message sent failed!', type: 'danger' })
       console.error(error);
     })
   }
@@ -105,6 +118,36 @@ const Contact = () => {
             {loading ? "Sending..." : "Submit"}
           </button>
         </form>
+      </div>
+
+      <div className='lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]'>
+        <Canvas
+          camera={{
+            position: [0, 0, 5],
+            fov: 75,
+            near: 0.1,
+            far: 1000,
+          }}
+        >
+          <directionalLight position={[0, 0, 1]} intensity={2.5} />
+          <ambientLight intensity={1} />
+          <pointLight position={[5, 10, 0]} intensity={2} />
+          <spotLight
+            position={[10, 10, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={2}
+          />
+
+          <Suspense fallback={<Loader />}>
+            <Fox
+              currentAnimation={currentAnimation}
+              position={[0.5, 0.35, 0]}
+              rotation={[12.629, -0.6, 0]}
+              scale={[0.5, 0.5, 0.5]}
+            />
+          </Suspense>
+        </Canvas>
       </div>
     </section>
   )
