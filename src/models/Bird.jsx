@@ -1,12 +1,13 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
 import React, { useRef } from 'react'
-import birdScene from "../assets/3d/birdScene"
+import birdScene from "../assets/3d/bird.glb"
 import { useFrame } from '@react-three/fiber'
-const Bird = () => {
+import { useEffect } from 'react'
+export const Bird = () => {
     const birdRef = useRef()
-    const { scene, animations } = useGLTF(planeScene);
+    const { scene, animations } = useGLTF(birdScene);
     // Get animation actions associated with the plane
-    const { actions } = useAnimations(animations, ref);
+    const { actions } = useAnimations(animations, birdRef);
 
     // Use an effect to control the plane's animation based on 'isRotating'
     // Note: Animation names can be found on the Sketchfab website where the 3D model is hosted.
@@ -14,7 +15,7 @@ const Bird = () => {
         actions["Take 001"].play();
     }, [actions]);
 
-    useFrame(() => {
+    useFrame(({ clock, camera }) => {
         birdRef.current.position.y = Math.sin(clock.elapsedTime) * 0.2 + 2;
 
         // Check if the bird reached a certain endpoint relative to the camera
@@ -47,5 +48,3 @@ const Bird = () => {
         </mesh>
     )
 }
-
-export default Bird

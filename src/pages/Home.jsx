@@ -3,8 +3,9 @@ import React, { Suspense, useState } from 'react'
 import Loader from '../components/Loader'
 import { Island } from '../models/Island'
 import { Sky } from '@react-three/drei'
-import Plane from '../models/Plane'
+import { Plane } from '../models/Plane'
 import HomeInfo from '../components/HomeInfo'
+import { Bird } from '../models'
 
 const Home = () => {
   const adjuctIslandForScreen = () => {
@@ -55,6 +56,7 @@ const Home = () => {
           <pointLight />
           <spotLight />
           <hemisphereLight skyColor="#b1e1ff" groundColor={"#000000"} intensity={1} />
+          <Bird />
           <Sky />
           <Island position={screenPosition} scale={screenScale} rotation={rotation} setCurrentStage={setCurrentStage} isRotating={isRotating} setIsRotating={setIsRotating} />
           <Plane isRotating={isRotating}
