@@ -6,8 +6,12 @@ import { Sky } from '@react-three/drei'
 import { Plane } from '../models/Plane'
 import HomeInfo from '../components/HomeInfo'
 import { Bird } from '../models'
+import sakura from "../assets/sakura.mp3";
 
 const Home = () => {
+  const audio = useRef(new Audio(sakura));
+  audio.current.volumn = 0.4;
+  audio.current.loop = true;
   const adjuctIslandForScreen = () => {
     let screenScale = null;
     let screenPosition = [0, -6.5, -43];
@@ -42,6 +46,17 @@ const Home = () => {
 
   const [isRotating, setIsRotating] = useState(false);
   const [currentStage, setCurrentStage] = useState(1)
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+
+  useEffect(() => {
+    if (isPlayingMusic) {
+      audioRef.current.play();
+    }
+
+    return () => {
+      audioRef.current.pause();
+    };
+  }, [isPlayingMusic]);
 
   return (
     <section className='w-full h-screen relative'>
@@ -65,6 +80,14 @@ const Home = () => {
             scale={biplaneScale} />
         </Suspense>
       </Canvas>
+      <div className='absolute bottom-2 left-2'>
+        <img
+          src={!isPlayingMusic ? soundoff : soundon}
+          alt='jukebox'
+          onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+          className='w-10 h-10 cursor-pointer object-contain'
+        />
+      </div>
     </section>
   )
 }
