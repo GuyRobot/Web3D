@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import React, { Suspense, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import Loader from '../components/Loader'
 import { Island } from '../models/Island'
 import { Sky } from '@react-three/drei'
@@ -7,11 +7,12 @@ import { Plane } from '../models/Plane'
 import HomeInfo from '../components/HomeInfo'
 import { Bird } from '../models'
 import sakura from "../assets/sakura.mp3";
+import { soundoff, soundon } from '../assets/icons'
 
 const Home = () => {
-  const audio = useRef(new Audio(sakura));
-  audio.current.volumn = 0.4;
-  audio.current.loop = true;
+  const audioRef = useRef(new Audio(sakura));
+  audioRef.current.volumn = 0.4;
+  audioRef.current.loop = true;
   const adjuctIslandForScreen = () => {
     let screenScale = null;
     let screenPosition = [0, -6.5, -43];
